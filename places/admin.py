@@ -2,16 +2,17 @@ from django.contrib import admin
 from .models import Place, Image
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from adminsortable2.admin import SortableAdminMixin, SortableStackedInline
 
 
-class ImageInline(admin.TabularInline):
+class ImageStackInline(SortableStackedInline):
     model = Image
     
 
 @admin.register(Place)
-class PlaceAdmin(admin.ModelAdmin):
+class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
     inlines = [
-        ImageInline
+        ImageStackInline
     ]
 
 
@@ -27,6 +28,4 @@ class ImageAdmin(admin.ModelAdmin):
             height=obj.image.height,
             )
     )
-   
-
 
