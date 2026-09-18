@@ -1,8 +1,20 @@
 from django.contrib import admin
+from .models import Place, Image
 
-from .models import Place
+
+class ImageInline(admin.TabularInline):
+    model = Image
+    
+
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    inlines = [
+        ImageInline
+    ]
 
 
-admin.site.register(Place)
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ('place', 'image')
 
 
