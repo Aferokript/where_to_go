@@ -5,27 +5,25 @@ from django.utils.safestring import mark_safe
 from adminsortable2.admin import SortableAdminMixin, SortableStackedInline
 
 
-class ImageStackInline(SortableStackedInline):
-    model = Image
-    
+class ImagePreviewMixin:
+    def image_preview(self, obj):
+        if not obj.image:
+            return '—'
+        return format_html('<img src="{}" height="200" />', obj.image.url)
 
+
+class ImageStackInline(ImagePreviewMixin, SortableStackedInline):
+    model = Image
+    readonly_fields = ('image_preview',)
+ 
+    
 @admin.register(Place)
 class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
     inlines = [
         ImageStackInline
     ]
-
+    
 
 @admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    list_display = ('place', 'place_image')
-    
-    
-    def place_image(self, obj):
-        return format_html('<img src="{url}" width="{width}" height={height} />'.format(
-            url = obj.image.url,
-            width=obj.image.width,
-            height=obj.image.height,
-            )
-    )
-
+class ImageAdmin(ImagePreviewMixin, admin.ModelAdmin):
+    list_display = ('place', 'image_preview')
