@@ -3,44 +3,66 @@ from tinymce.models import HTMLField
 
 
 class Place(models.Model):
-    title = HTMLField()
-    description_short = HTMLField()
-    description_long = HTMLField()
-    lon = models.FloatField()
-    lat = models.FloatField()
-    
-    place_for_order = models.PositiveIntegerField(
-        default = 0,
-        blank = True,
-        null = True
+    title = models.CharField(
+        max_length=120,
+        blank=False,
+        verbose_name='название',
     )
-    
+    short_description = models.TextField(
+        blank=True,
+        verbose_name='краткое описание',
+    )
+    long_description = HTMLField(
+        blank=True,
+        verbose_name='полное описание',
+    )
+    lon = models.FloatField(
+        verbose_name='долгота',
+    )
+    lat = models.FloatField(
+        verbose_name='широта',
+    )
+
+    place_order = models.PositiveIntegerField(
+        blank=False,
+        null=False,
+        verbose_name='порядок',
+    )
+
     class Meta:
-        ordering = ['place_for_order']
-        
-    
+        ordering = ['place_order']
+        verbose_name = 'место'
+        verbose_name_plural = 'места'
+
     def __str__(self):
         return self.title
-    
+
 
 class Image(models.Model):
-    place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='places/')
-    
-    image_for_order = models.PositiveIntegerField(
-        blank = True,
-        null = True
+    place = models.ForeignKey(
+        Place,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='место',
     )
-    
-    
-    class Meta():
-        ordering = ['image_for_order']
-    
-    
+    image = models.ImageField(
+        upload_to='places/',
+        verbose_name='фото',
+    )
+
+    image_order = models.PositiveIntegerField(
+        blank=False,
+        null=False,
+        verbose_name='порядок',
+    )
+
+    class Meta:
+        ordering = ['image_order']
+        verbose_name = 'фото'
+        verbose_name_plural = 'фото'
+
     def __str__(self):
         return f'{self.place} {self.image}'
-    
-    
 
 
     
