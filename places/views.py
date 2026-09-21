@@ -37,8 +37,8 @@ def place_detail(request, place_id):
     place_data = {
         "title": place.title,
         "imgs": [img.image.url for img in place.images.all()],
-        "description_short": place.description_short,
-        "description_long": place.description_long,
+        "description_short": place.short_description,
+        "description_long": place.long_description,
         "coordinates": {
             "lat": place.lat,
             "lng": place.lon,
@@ -46,6 +46,10 @@ def place_detail(request, place_id):
     }
     context = {'place_data': place_data}
     return JsonResponse(place_data, json_dumps_params={'ensure_ascii': False})
+      
+    
+
+
       
     
 
