@@ -35,7 +35,16 @@ urllib3==2.8.0
 
 Чтобы ею воспользоваться, откройте терминал, перейдите в директорию ближайшую к manage.py. Это можно сделать командой cd where_to_go и пропишите:
 
-`python manage.py load_places "ссылка на json файл с описанием места"`
+`python manage.py load_places https://raw.githubusercontent.com/devmanorg/where-to-go-places/refs/heads/master/places/Заброшенный%20пионерский%20лагерь%20«Сказка».json`
+
+Последний элемент команды - это ссылка на json файл места. Чтобы команда его скачала он должен иметь следующую структуру:
+
+title:
+imgs:
+description_short
+description_long
+lng
+lat
 
 ## Установка 
 
