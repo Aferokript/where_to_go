@@ -23,17 +23,6 @@ class Place(models.Model):
         verbose_name='широта',
     )
 
-    place_order = models.PositiveIntegerField(
-        blank=False,
-        null=False,
-        verbose_name='порядок',
-    )
-
-    class Meta:
-        ordering = ['place_order']
-        verbose_name = 'место'
-        verbose_name_plural = 'места'
-
     def __str__(self):
         return self.title
 
@@ -54,12 +43,14 @@ class Image(models.Model):
         blank=False,
         null=False,
         verbose_name='порядок',
+        db_index=True
     )
 
     class Meta:
         ordering = ['image_order']
         verbose_name = 'фото'
         verbose_name_plural = 'фото'
+
 
     def __str__(self):
         return f'{self.place} {self.image}'
