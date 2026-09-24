@@ -1,8 +1,8 @@
-from django.contrib import admin
-from .models import Place, Image
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from adminsortable2.admin import SortableAdminMixin, SortableStackedInline
+from adminsortable2.admin import SortableAdminBase, SortableStackedInline
+from .models import Place, Image
+from django.contrib import admin
 
 
 class ImagePreviewMixin:
@@ -18,7 +18,7 @@ class ImageStackInline(ImagePreviewMixin, SortableStackedInline):
  
     
 @admin.register(Place)
-class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
+class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [
         ImageStackInline
     ]
