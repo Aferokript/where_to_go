@@ -43,12 +43,28 @@ tzdata==2026.4
 
 Последний элемент команды - это ссылка на json файл места. Чтобы команда его скачала он должен иметь следующую структуру:
 
-title:
-imgs:
-description_short
-description_long
-lng
-lat
+```<script id="places-geojson" type="application/json">
+  {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [37.62, 55.793676]
+        },
+        "properties": {
+          // Специфичные для этого сайта данные
+          "title": "Легенды Москвы",
+          "placeId": "moscow_legends",
+          "detailsUrl": "./places/moscow_legends.json"
+        }
+      },
+      // ...
+    ]
+  }
+</script>
+```
 
 ## Установка 
 
