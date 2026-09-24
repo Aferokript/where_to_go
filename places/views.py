@@ -47,6 +47,10 @@ def place_detail(request, place_id):
     return JsonResponse(place_data, json_dumps_params={'ensure_ascii': False})
     
     
+      
+    
+    
+    
 
 
       
