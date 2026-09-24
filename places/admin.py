@@ -1,8 +1,8 @@
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from adminsortable2.admin import SortableAdminBase, SortableStackedInline
-from .models import Place, Image
 from django.contrib import admin
+from .models import Place, Image
 
 
 class ImagePreviewMixin:
@@ -27,3 +27,5 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 @admin.register(Image)
 class ImageAdmin(ImagePreviewMixin, admin.ModelAdmin):
     list_display = ('place', 'image_preview')
+
+
