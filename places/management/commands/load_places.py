@@ -1,7 +1,7 @@
-import requests
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from places.models import Place, Image
+import requests
 
 
 class Command(BaseCommand):
@@ -48,8 +48,9 @@ class Command(BaseCommand):
                 ContentFile(image_data),
                 save=True,
             )
-        return self.stderr.write('Успешно!')
+        return self.stdout.write('Успешно!')
             
+        
 
             
             
