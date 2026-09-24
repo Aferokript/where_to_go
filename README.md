@@ -19,15 +19,18 @@
 В данный проект входят следующие библиотеки:
 
 asgiref==3.12.1
+certifi==2026.7.22
 Django==5.2.17
 django-admin-sortable2==2.3.1
+django-environ==0.14.0
 django-tinymce==5.0.0
+idna==3.20
 pillow==12.3.0
 python-dotenv==1.2.3
 requests==2.34.2
 sqlparse==0.6.0
 typing_extensions==4.16.0
-urllib3==2.8.0
+tzdata==2026.4
 
 ## Кастомные команды
 
