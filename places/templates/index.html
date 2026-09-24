@@ -33,20 +33,20 @@
       padding: 14px 20px;
       height: 100%;
     }
-    .select-place-prompt{
+
+    .select-place-prompt {
       color: red;
       width: 100px;
     }
   </style>
-  <script id="places-geojson" type="application/json">
-    {{ place_data|safe }}
-      
-  </script>
+
+  {{ place_data|json_script:"places-geojson" }}
 
   <script id="app-template" type="text/template">
+    {% verbatim %}
     <div v-bind:class="{'sidebar-content': 1, 'bg-white': selectedPlace, 'bg-secondary': !selectedPlace}">
       <div v-if="promptVisible" class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-        <img class="d-block select-place-prompt mb-4" src="{% static 'hand-pointer-regular.svg' %}" alt="Select place">
+        <img class="d-block select-place-prompt mb-4" src="/static/hand-pointer-regular.svg" alt="Select place">
         <h4>Выберите место на карте</h4>
       </div>
 
@@ -57,7 +57,6 @@
       </div>
 
       <div class="place-description" v-if="selectedPlace">
-
         <img v-if="mainPhotoSrc" v-bind:src="mainPhotoSrc" class="d-block shadow mb-3 rounded" v-bind:alt="selectedPlace.title">
 
         <h5 class="mb-3">{{ selectedPlace.title }}</h5>
@@ -92,8 +91,8 @@
         <div v-html="selectedPlace.long_description"></div>
       </div>
     </div>
+    {% endverbatim %}
   </script>
-
 </head>
 <body>
   <div id="sidebar">
@@ -141,7 +140,7 @@
       },
       events: {
         click: event => {
-          if (event.target.name == 'debug'){
+          if (event.target.name == 'debug') {
             let level = event.target.checked && 'debug' || 'warn';
             log.setLevel(level);
             console.log(`Set log level: ${level}`)
@@ -150,10 +149,10 @@
       }
     }).addTo(map);
 
-    function loadJSON(elementId){
+    function loadJSON(elementId) {
       let element = document.getElementById(elementId);
 
-      if (!element){
+      if (!element) {
         log.error(`Not found element with id '${elementId}'.`)
         return null;
       }
@@ -164,39 +163,38 @@
     let places = loadJSON('places-geojson');
     log.debug('Load GeoJSON for places', places);
 
-
     L.geoJSON(places, {
-        pointToLayer: function(geoJsonPoint, latlng) {
-          if (geoJsonPoint.geometry.type != "Point"){
-            return
-          }
-
-          let color = geoJsonPoint.properties.color || 'red';
-
-          var pulsingIcon = L.icon.pulse({
-            iconSize: [12, 12],
-            color: color,
-            fillColor: color,
-            heartbeat: 2.5,
-          });
-
-          let marker = L.marker(latlng, {
-            icon: pulsingIcon,
-            riseOnHover: true,
-          });
-
-          marker.bindTooltip(geoJsonPoint.properties.title);
-          marker.bindPopup(function (layer) {
-            return geoJsonPoint.properties.title;
-          })
-
-          marker.on('click', function(event){
-            log.debug('Feature selected', geoJsonPoint);
-            sidebar.show();
-            loadPlaceInfo(geoJsonPoint.properties.placeId, geoJsonPoint.properties.detailsUrl);
-          });
-          return marker;
+      pointToLayer: function(geoJsonPoint, latlng) {
+        if (geoJsonPoint.geometry.type != "Point") {
+          return
         }
+
+        let color = geoJsonPoint.properties.color || 'red';
+
+        var pulsingIcon = L.icon.pulse({
+          iconSize: [12, 12],
+          color: color,
+          fillColor: color,
+          heartbeat: 2.5,
+        });
+
+        let marker = L.marker(latlng, {
+          icon: pulsingIcon,
+          riseOnHover: true,
+        });
+
+        marker.bindTooltip(geoJsonPoint.properties.title);
+        marker.bindPopup(function (layer) {
+          return geoJsonPoint.properties.title;
+        })
+
+        marker.on('click', function(event) {
+          log.debug('Feature selected', geoJsonPoint);
+          sidebar.show();
+          loadPlaceInfo(geoJsonPoint.properties.placeId, geoJsonPoint.properties.detailsUrl);
+        });
+        return marker;
+      }
     }).addTo(map);
 
     var sidebarApp = new Vue({
@@ -219,13 +217,13 @@
           return this.loadingPlaceId !== null;
         },
         mainPhotoSrc: function () {
-          if (!this.selectedPlace || !this.selectedPlace.imgs.length){
+          if (!this.selectedPlace || !this.selectedPlace.imgs.length) {
             return null;
           }
           return this.selectedPlace.imgs[0];
         },
         carouselImgs: function () {
-          if (!this.selectedPlace || !this.selectedPlace.imgs.length){
+          if (!this.selectedPlace || !this.selectedPlace.imgs.length) {
             return [];
           }
           return this.selectedPlace.imgs.slice(1);
@@ -251,20 +249,20 @@
       sidebarApp.loadingPlaceId = null;
     })
 
-    async function loadPlaceInfo(placeId, detailsUrl){
+    async function loadPlaceInfo(placeId, detailsUrl) {
       sidebarApp.selectedPlace = null;
       sidebarApp.loadingPlaceId = placeId;
 
       try {
         let response = await fetch(detailsUrl);
 
-        if (!response.ok){
+        if (!response.ok) {
           return;
         }
 
         let data = await response.json();
 
-        if (sidebarApp.loadingPlaceId != placeId){
+        if (sidebarApp.loadingPlaceId != placeId) {
           // Place loading was cancelled by user
           return
         }
@@ -277,7 +275,7 @@
           long_description: data.description_long,
         };
       } finally {
-        if (sidebarApp.loadingPlaceId == placeId){
+        if (sidebarApp.loadingPlaceId == placeId) {
           sidebarApp.loadingPlaceId = null;
         }
       }
