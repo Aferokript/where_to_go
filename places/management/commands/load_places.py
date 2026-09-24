@@ -48,6 +48,9 @@ class Command(BaseCommand):
                 ContentFile(image_data),
                 save=True,
             )
+        return self.stderr.write('Успешно!')
+            
+
             
             
            
